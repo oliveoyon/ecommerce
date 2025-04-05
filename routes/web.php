@@ -68,6 +68,11 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     Route::put('sizes/{size}', [ProductMgmtController::class, 'sizeUpdate'])->name('sizes.update');  // Update Size
     Route::delete('sizes/{size}', [ProductMgmtController::class, 'sizeDelete'])->name('sizes.delete');  // Delete Size
 
+    Route::get('supplier-management', [ProductMgmtController::class, 'suppliers'])->name('dashboard.suppliers');
+    Route::post('suppliers', [ProductMgmtController::class, 'supplierAdd'])->name('suppliers.add');  // Add Supplier
+    Route::put('suppliers/{supplier}', [ProductMgmtController::class, 'supplierUpdate'])->name('suppliers.update');  // Update Supplier
+    Route::delete('suppliers/{supplier}', [ProductMgmtController::class, 'supplierDelete'])->name('suppliers.delete');  // Delete Supplier
+
     Route::get('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 });
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Color;
 use App\Models\Size;
+use App\Models\Supplier;
 
 class ProductMgmtController extends Controller
 {
@@ -113,6 +114,68 @@ class ProductMgmtController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Size deleted successfully!',
+        ]);
+    }
+
+    public function suppliers()
+    {
+        $suppliers = Supplier::all();
+        return view('dashboard.admin.supplier', compact('suppliers'));
+    }
+    // Function to Add a New Supplier
+    public function supplierAdd(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:suppliers,name',
+        ]);
+
+        // Create a new supplier
+        $supplier = new Supplier();
+        $supplier->name = $request->name;
+        $supplier->contact_person = $request->contact_person;
+        $supplier->phone = $request->phone;
+        $supplier->email = $request->email;
+        $supplier->address = $request->address;
+        $supplier->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Supplier added successfully!',
+            'supplier' => $supplier,
+        ]);
+    }
+
+    // Function to Update an Existing Supplier
+    public function supplierUpdate(Request $request, $supplierId)
+    {
+        $request->validate([
+            'name' => 'required|unique:suppliers,name,' . $supplierId,
+        ]);
+
+        $supplier = Supplier::findOrFail($supplierId);
+        $supplier->name = $request->name;
+        $supplier->contact_person = $request->contact_person;
+        $supplier->phone = $request->phone;
+        $supplier->email = $request->email;
+        $supplier->address = $request->address;
+        $supplier->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Supplier updated successfully!',
+            'supplier' => $supplier,
+        ]);
+    }
+
+    // Function to Delete a Supplier
+    public function supplierDelete($supplierId)
+    {
+        $supplier = Supplier::findOrFail($supplierId);
+        $supplier->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Supplier deleted successfully!',
         ]);
     }
 }
