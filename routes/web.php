@@ -6,9 +6,9 @@ use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductMgmtController;
-
-
+use App\Models\SubCategory;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -73,6 +73,19 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     Route::put('suppliers/{supplier}', [ProductMgmtController::class, 'supplierUpdate'])->name('suppliers.update');  // Update Supplier
     Route::delete('suppliers/{supplier}', [ProductMgmtController::class, 'supplierDelete'])->name('suppliers.delete');  // Delete Supplier
 
+    Route::prefix('products')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('products.index');
+        Route::post('/', [ProductController::class, 'store'])->name('products.store');
+        Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::put('/{id}', [ProductController::class, 'update'])->name('products.update');
+    });
+
+    Route::get('/subcategories-by-category/{categoryId}', function ($categoryId) {
+        return SubCategory::where('category_id', $categoryId)->get();
+    });
+    
+    
+    
     Route::get('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 });
 
