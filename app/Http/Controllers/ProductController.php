@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\Product;
+use App\Models\ProductImage;
+use App\Models\Size;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -16,9 +20,12 @@ class ProductController extends Controller
         $brands = Brand::all();
         $categories = Category::all();
         $units = Unit::all();
+        $colors = Color::all();    // Add this
+        $sizes = Size::all();      // And this
 
-        return view('products.index', compact('products', 'brands', 'categories', 'units'));
+        return view('products.index', compact('products', 'brands', 'categories', 'units', 'colors', 'sizes'));
     }
+
 
     public function store(Request $request)
     {
@@ -50,6 +57,12 @@ class ProductController extends Controller
             }
         }
 
+        if ($request->has('has_variants') && $request->filled('variants')) {
+            foreach ($request->variants as $variant) {
+                $product->variants()->create($variant);
+            }
+        }
+
         return response()->json(['success' => true]);
     }
 
@@ -57,7 +70,7 @@ class ProductController extends Controller
 
     public function edit($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with(['images'])->findOrFail($id);
         return response()->json($product);
     }
 
@@ -91,6 +104,21 @@ class ProductController extends Controller
                 ]);
             }
         }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function deleteImage($id)
+    {
+        $image = ProductImage::findOrFail($id);
+        
+        // Delete the file from storage
+        if (Storage::exists('public/' . $image->image_path)) {
+            Storage::delete('public/' . $image->image_path);
+        }
+
+        // Delete from DB
+        $image->delete();
 
         return response()->json(['success' => true]);
     }

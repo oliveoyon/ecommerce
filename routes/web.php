@@ -78,6 +78,8 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
         Route::post('/', [ProductController::class, 'store'])->name('products.store');
         Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
         Route::put('/{id}', [ProductController::class, 'update'])->name('products.update');
+        Route::delete('/images/{id}', [ProductController::class, 'deleteImage'])->name('products.images.delete');
+
     });
 
     Route::get('/subcategories-by-category/{categoryId}', function ($categoryId) {
