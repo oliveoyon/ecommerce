@@ -8,6 +8,8 @@ use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductMgmtController;
+use App\Http\Controllers\ProductVariantController;
+use App\Http\Controllers\PurchaseController;
 use App\Models\SubCategory;
 use Illuminate\Support\Facades\Auth;
 
@@ -82,9 +84,19 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
 
     });
 
+    Route::resource('purchases', PurchaseController::class);
+    // routes/web.php  (inside your admin / resource group if you have one)
+Route::get('/admin/products/{product}/variants',[PurchaseController::class, 'getVariants'])->name('products.variants');
+
+    
+    // Optional: If you want a separate route to get products (e.g. for AJAX)
+    Route::get('products-list', [PurchaseController::class, 'getProducts'])->name('products.list');
+
     Route::get('/subcategories-by-category/{categoryId}', function ($categoryId) {
         return SubCategory::where('category_id', $categoryId)->get();
     });
+
+Route::resource('variants', ProductVariantController::class);
     
     
     

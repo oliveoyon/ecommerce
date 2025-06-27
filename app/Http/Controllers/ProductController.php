@@ -28,85 +28,117 @@ class ProductController extends Controller
 
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required',
-            'category_id' => 'required',
-            'subcategory_id' => 'required',
-            'brand_id' => 'nullable',
-            'unit_id' => 'nullable',
-            'default_purchase_price' => 'nullable|numeric',
-            'default_sale_price' => 'nullable|numeric',
-            'description' => 'nullable|string',
-        ]);
+{
+    $validated = $request->validate([
+        'name'                  => 'required',
+        'category_id'           => 'required',
+        'subcategory_id'        => 'required',
+        'brand_id'              => 'nullable',
+        'unit_id'               => 'nullable',
+        'default_purchase_price'=> 'nullable|numeric',
+        'default_sale_price'    => 'nullable|numeric',
+        'description'           => 'nullable|string',
+        // variants is optional JSON; validate it’s valid JSON if you like
+    ]);
 
-        $validated['has_variants'] = $request->has('has_variants');
-        $validated['has_expiry'] = $request->has('has_expiry');
+    $validated['has_variants'] = $request->has('has_variants');
+    $validated['has_expiry']   = $request->has('has_expiry');
 
-        $product = Product::create($validated);
+    $product = Product::create($validated);
 
-        // ✅ Image upload logic
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $filename = $image->store('products', 'public');
+    /* ----------  IMAGES  ---------- */
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $idx => $image) {
+            $filename = $image->store('products', 'public');
+            $product->images()->create([
+                'image_path' => $filename,
+                'is_primary' => $idx === 0,
+            ]);
+        }
+    }
 
-                $product->images()->create([
-                    'image_path' => $filename,
-                    'is_primary' => $index === 0,
+    /* ----------  VARIANTS  ---------- */
+    if ($request->has('has_variants')) {
+        // get the JSON string and decode to PHP array
+        $variants = json_decode($request->input('variants', '[]'), true);
+
+        if (is_array($variants) && count($variants)) {
+            foreach ($variants as $v) {
+                $product->variants()->create([
+                    'color_id' => $v['color_id'] ?? null,
+                    'size_id'  => $v['size_id']  ?? null,
                 ]);
             }
         }
 
-        if ($request->has('has_variants') && $request->filled('variants')) {
-            foreach ($request->variants as $variant) {
-                $product->variants()->create($variant);
-            }
+    }
+
+    return response()->json(['success' => true]);
+}
+
+
+
+
+    // Add variants relationship loading in edit
+public function edit($id)
+{
+    $product = Product::with(['images', 'variants'])->findOrFail($id);
+    return response()->json($product);
+}
+
+public function update(Request $request, $id)
+{
+    $validated = $request->validate([
+        'name' => 'required',
+        'category_id' => 'required',
+        'subcategory_id' => 'required',
+        'brand_id' => 'nullable',
+        'unit_id' => 'nullable',
+        'default_purchase_price' => 'nullable|numeric',
+        'default_sale_price' => 'nullable|numeric',
+        'description' => 'nullable|string',
+    ]);
+
+    $validated['has_variants'] = $request->has('has_variants');
+    $validated['has_expiry'] = $request->has('has_expiry');
+
+    $product = Product::findOrFail($id);
+    $product->update($validated);
+
+    // Images upload (existing logic)
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $index => $image) {
+            $filename = $image->store('products', 'public');
+            $product->images()->create([
+                'image_path' => $filename,
+                'is_primary' => false,
+            ]);
         }
-
-        return response()->json(['success' => true]);
     }
 
+    // Handle variants update:
+    if ($request->has('has_variants')) {
+        // Delete all existing variants for this product first
+        $product->variants()->delete();
 
-
-    public function edit($id)
-    {
-        $product = Product::with(['images'])->findOrFail($id);
-        return response()->json($product);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'name' => 'required',
-            'category_id' => 'required',
-            'subcategory_id' => 'required',
-            'brand_id' => 'nullable',
-            'unit_id' => 'nullable',
-            'default_purchase_price' => 'nullable|numeric',
-            'default_sale_price' => 'nullable|numeric',
-            'description' => 'nullable|string',
-        ]);
-
-        $validated['has_variants'] = $request->has('has_variants');
-        $validated['has_expiry'] = $request->has('has_expiry');
-
-        $product = Product::findOrFail($id);
-        $product->update($validated);
-
-        // ✅ Upload new images if provided
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $filename = $image->store('products', 'public');
-
-                $product->images()->create([
-                    'image_path' => $filename,
-                    'is_primary' => false, // you can manage primary selection later
+        // Add new variants from JSON input
+        $variants = json_decode($request->input('variants', '[]'), true);
+        if (is_array($variants)) {
+            foreach ($variants as $v) {
+                $product->variants()->create([
+                    'color_id' => $v['color_id'] ?? null,
+                    'size_id' => $v['size_id'] ?? null,
                 ]);
             }
         }
-
-        return response()->json(['success' => true]);
+    } else {
+        // If has_variants is unchecked, remove all variants
+        $product->variants()->delete();
     }
+
+    return response()->json(['success' => true]);
+}
+
 
     public function deleteImage($id)
     {

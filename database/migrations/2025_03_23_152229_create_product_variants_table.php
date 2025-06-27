@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade'); // FK to products table
             $table->foreignId('color_id')->nullable()->constrained()->onDelete('set null'); // FK to colors table
             $table->foreignId('size_id')->nullable()->constrained()->onDelete('set null'); // FK to sizes table
-            $table->integer('quantity_in_stock')->default(0); // Stock quantity for this variant
-            $table->decimal('variant_price', 10, 2)->nullable(); // Price specific to this variant (optional)
+            // $table->integer('quantity_in_stock')->default(0); // Stock quantity for this variant
+            // $table->decimal('variant_price', 10, 2)->nullable(); // Price specific to this variant (optional)
             $table->timestamps();
         });
     }
