@@ -85,8 +85,9 @@ Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
     });
 
     Route::resource('purchases', PurchaseController::class);
+    Route::get('products/{product}/variants', [PurchaseController::class, 'getVariants'])
+        ->name('products.variants');
     // routes/web.php  (inside your admin / resource group if you have one)
-Route::get('/admin/products/{product}/variants',[PurchaseController::class, 'getVariants'])->name('products.variants');
 
     
     // Optional: If you want a separate route to get products (e.g. for AJAX)
@@ -96,7 +97,14 @@ Route::get('/admin/products/{product}/variants',[PurchaseController::class, 'get
         return SubCategory::where('category_id', $categoryId)->get();
     });
 
-Route::resource('variants', ProductVariantController::class);
+    Route::resource('variants', ProductVariantController::class);
+    /* --- General Settings (single-row) --- */
+    Route::get( '/settings',          [App\Http\Controllers\SettingsController::class, 'edit'] )
+        ->name('settings.edit');     // form
+
+    Route::put('/settings',           [App\Http\Controllers\SettingsController::class, 'update'] )
+        ->name('settings.update');   // save
+
     
     
     

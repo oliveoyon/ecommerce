@@ -1,0 +1,32 @@
+1. Implement Purchase Return / Credit Notes
+Allow users to create purchase returns or credit notes for damaged or excess items.
+
+Adjust stock quantities accordingly.
+
+Track return reasons and update financials.
+
+2. Stock Alerts and Expiry Management
+Notify or highlight products/batches nearing expiry.
+
+Set minimum stock levels to alert low stock for replenishment.
+
+Create a dashboard widget for quick stock status overview.
+
+3. Reporting and Analytics
+Generate purchase reports (daily, monthly, yearly).
+
+Show supplier-wise purchase summary.
+
+Stock movement reports: in/out flow with dates and batches.
+
+4. User Access Control & Audit Trail
+Restrict purchase creation/editing based on user roles.
+
+Log changes to purchases and stock updates for audit.
+
+5. Enhance UI/UX
+Add client-side validation for better user experience.
+
+Use dynamic form features for easier bulk purchase entry (autocomplete, inline validations).
+
+Mobile responsiveness and accessibility improvements.
