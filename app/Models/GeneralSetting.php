@@ -9,8 +9,8 @@ class GeneralSetting extends Model
     protected $guarded = [];   // all columns fillable
     public static function current(): self
     {
-        return cache()->rememberForever('general_settings', fn () =>
-            self::first() ?? self::create(['shop_name' => 'My Shop'])
-        );
+        return cache()->rememberForever('general_settings', function () {
+            return self::firstOrFail();
+        });
     }
 }

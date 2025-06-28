@@ -127,6 +127,48 @@
             </div>
         </div>
 
+        {{-- DOCUMENT FOOTERS --}}
+        <div class="card mb-4">
+            <div class="card-header fw-bold">Document Footers / Notes</div>
+            <div class="card-body">
+                <label class="form-label">Invoice / Receipt Footer</label>
+                <textarea name="invoice_footer" rows="3" class="form-control">{{ old('invoice_footer',$setting->invoice_footer) }}</textarea>
+
+                <label class="form-label mt-3">Email Signature / Footer</label>
+                <textarea name="email_signature" rows="3" class="form-control">{{ old('email_signature',$setting->email_signature) }}</textarea>
+
+                <label class="form-label mt-3">Website Footer Text</label>
+                <textarea name="site_footer" rows="3" class="form-control">{{ old('site_footer',$setting->site_footer) }}</textarea>
+            </div>
+        </div>
+
+        {{-- SOCIAL MEDIA --}}
+        <div class="card mb-4">
+            <div class="card-header fw-bold">Social Media Links</div>
+            <div class="card-body row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Facebook</label>
+                    <input name="facebook" type="url" class="form-control" value="{{ old('facebook',$setting->facebook) }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Instagram</label>
+                    <input name="instagram" type="url" class="form-control" value="{{ old('instagram',$setting->instagram) }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">X (Twitter)</label>
+                    <input name="x" type="url" class="form-control" value="{{ old('x',$setting->x) }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">LinkedIn</label>
+                    <input name="linkedin" type="url" class="form-control" value="{{ old('linkedin',$setting->linkedin) }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">YouTube</label>
+                    <input name="youtube" type="url" class="form-control" value="{{ old('youtube',$setting->youtube) }}">
+                </div>
+            </div>
+        </div>
+
         {{-- MISC --}}
         <div class="card mb-4">
             <div class="card-header fw-bold">Preferences</div>

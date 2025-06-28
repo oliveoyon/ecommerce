@@ -10,13 +10,12 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductMgmtController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\WebController;
 use App\Models\SubCategory;
 use Illuminate\Support\Facades\Auth;
 
 
-Route::get('/', function () {
-    return view('welcome'); // You can replace 'welcome' with your desired view
-});
+Route::get('/', [WebController::class, 'index'])->name('web.index');
 
 
 Route::prefix('user')->group(function () {

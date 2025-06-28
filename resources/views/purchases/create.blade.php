@@ -111,7 +111,7 @@ function addItemRow() {
                 </select>
             </td>
             <td>
-                <select name="items[${itemIndex}][product_variant_id]" class="form-control variant-select" required>
+                <select name="items[${itemIndex}][product_variant_id]" class="form-control variant-select">
                     <option value="">-</option>
                 </select>
             </td>

@@ -34,6 +34,7 @@
             <li class="has-submenu">
                 <a href="#"><i class="fas fa-cogs"></i> General Settings</a>
                 <ul class="submenu">
+                    <li><a href="{{ route('settings.update') }}"><i class="fas fa-tags"></i> General Settings</a></li>
                     <li><a href="{{ route('dashboard.categories') }}"><i class="fas fa-tags"></i> Manage Category</a></li>
                     <li><a href="{{ route('dashboard.subcategories') }}"><i class="fas fa-tags"></i> Manage Sub Category</a></li>
                     <li><a href="{{ route('dashboard.units') }}"><i class="fas fa-tags"></i> Manage Unit</a></li>
@@ -46,6 +47,9 @@
                 <ul class="submenu">
                     <li><a href="{{ route('dashboard.colors') }}"><i class="fas fa-tags"></i> Manage Product Color</a></li>
                     <li><a href="{{ route('dashboard.sizes') }}"><i class="fas fa-tags"></i> Manage Product Size</a></li>
+                    <li><a href="{{ route('dashboard.suppliers') }}"><i class="fas fa-tags"></i> Supplier Management</a></li>
+                    <li><a href="{{ route('products.index') }}"><i class="fas fa-tags"></i> Product Management</a></li>
+                    <li><a href="{{ route('purchases.index') }}"><i class="fas fa-tags"></i> Purchase Mgmt</a></li>
                 </ul>
             </li>
         
@@ -54,10 +58,6 @@
             <li><a href="#"><i class="fas fa-database"></i> Data Entry Forms</a></li>
         
           
-        
-            <li><a href="#"><i class="fas fa-database"></i> Data Entry Management</a></li>
-        
-            <li><a href="#"><i class="fas fa-bell"></i> Notifications</a></li>
         
             
     
